@@ -1,0 +1,17 @@
+# pyproject.toml
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "--doctest-modules"
+
+[tool.flake8]
+ignore = ['E203', 'D203', 'E501', 'W503']
+exclude = [
+        '.git',
+        '__pycache__',
+        'docs/source/conf.py',
+        'old',
+        'build',
+        'dist',
+        '.venv',
+]
+max-complexity = 25
