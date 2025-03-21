@@ -1,0 +1,9 @@
+stages:
+  - test
+
+test-pre-commit:
+  stage: test
+  tags:
+    - darp-group-shell-runner
+  script:
+    - source ~/miniconda3/bin/activate && pre-commit run --all-files
