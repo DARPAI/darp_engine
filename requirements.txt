@@ -9,6 +9,7 @@ charset-normalizer==3.4.1
 click==8.1.8
 distlib==0.3.9
 fastapi==0.115.11
+fastapi-pagination==0.12.34
 filelock==3.18.0
 greenlet==3.1.1
 h11==0.14.0
