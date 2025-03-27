@@ -1,0 +1,4 @@
+#!/bin/sh
+
+DATE="$(date +%F)";
+export REGISTRY_IMAGE="hipasus/$CI_PROJECT_NAME:0.0-$DATE"

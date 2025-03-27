@@ -1,0 +1,11 @@
+#!/bin/sh
+
+## Connect SSH agent using keys stored in the repo & passphrase in gitlab
+## https://medium.com/opsops/the-way-to-handle-ci-owned-ssh-keys-in-gitlab-5085be5c4637
+## use "ssh-keygen -F ssh.example.com" to generate new SSH_KNOWN_HOSTS
+install -d -m 700 ~/.ssh
+cat "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+cat "$SSH_KEY" > ~/.ssh/key
+chmod 600 ~/.ssh/known_hosts ~/.ssh/key
+eval $(ssh-agent -s)
+DISPLAY=1 SSH_ASKPASS=deploy/ssh-passphrase ssh-add ~/.ssh/key
