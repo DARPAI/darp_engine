@@ -6,6 +6,7 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
+from ...database import models
 from .base import Base
 
 
@@ -22,4 +23,4 @@ class Tool(Base):
     server_url: Mapped[str] = mapped_column(
         ForeignKey("server.url", ondelete="CASCADE")
     )
-    server: Mapped["Server"] = relationship(back_populates="tools")  # noqa
+    server: Mapped["models.server.Server"] = relationship(back_populates="tools")

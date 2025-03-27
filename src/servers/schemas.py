@@ -23,3 +23,10 @@ class ServerCreate(BaseSchema):
 class Server(ServerCreate):
     id: int
     tools: list[Tool]
+
+
+class ServerUpdate(BaseSchema):
+    name: str | None = None
+    description: str | None = None
+    url: str | None = None
+    logo: str | None = None
