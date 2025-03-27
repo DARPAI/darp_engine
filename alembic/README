@@ -1,0 +1,29 @@
+# Alembic
+
+## How to run
+
+Here mostly you need is `./versions` folder
+
+### 1. Autogennerate new revision
+
+```
+alembic revision --autogenerate -m 'Revision name'
+```
+
+It works like git. The command above compare your table classes from `suos.models.py` with tables in existing database.  
+Please check your env to understand which database you are using.
+
+After that you can find new file in `./versions` folder. Here you can see two functions.
+
+1) `def upgrade():` - this function contains commands for database to make it same as your classes from `suos.models.py`. It will be empty is database absolutley same as classes.
+
+2) `def downgrade():` - this function contains commands for database to make it same as previous after using `upgrade` function. 
+
+
+### 2. Run new genwrated revision
+
+```
+alembic upgrade head
+```
+
+This command apply changes from `upgrade` function to database.
