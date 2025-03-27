@@ -1,0 +1,11 @@
+#!/bin/sh
+set -ex
+
+. deploy/ssh-agent
+. deploy/docker-version
+
+docker image push "$REGISTRY_IMAGE"
+export DOCKER_HOST="$1"
+
+docker image pull "$REGISTRY_IMAGE"
+docker compose up -d --remove-orphans "$CI_PROJECT_NAME"

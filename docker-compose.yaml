@@ -1,0 +1,18 @@
+services:
+  registry:
+    build:
+      context: .
+    environment:
+      - UVICORN_PORT
+      - DATABASE_URL
+    image: "$REGISTRY_IMAGE"
+    container_name: "$CI_PROJECT_NAME"
+    pull_policy: always
+    restart: always
+    volumes:
+      - /var/lib/highkey/$CI_PROJECT_NAME/logs:/workspace/logs
+
+networks:
+  default:
+    name: highkey_network
+    external: true
