@@ -10,6 +10,7 @@ from .schemas import Tool
 from src.database import Server
 from src.errors import ServerAlreadyExistsError
 from src.errors import ServerNotFoundError
+from src.logger import logger
 
 
 class ServerService:
@@ -66,6 +67,21 @@ class ServerService:
     async def _assure_server_not_exists(self, **kwargs) -> None:
         if servers := await self.repo.find_servers(**kwargs):
             raise ServerAlreadyExistsError(servers)
+
+    async def get_search_servers(self) -> list[Server]:
+        servers_query = await self.repo.get_all_servers()
+        servers = (await self.repo.session.execute(servers_query)).scalars().all()
+        return list(servers)
+
+    async def get_servers_by_urls(self, server_urls: list[str]) -> list[Server]:
+        servers = await self.repo.get_servers_by_urls(urls=server_urls)
+        if len(server_urls) != len(servers):
+            retrieved_server_urls = {server.url for server in servers}
+            missing_server_urls = set(server_urls) - retrieved_server_urls
+            logger.warning(
+                f"One or more server urls are incorrect {missing_server_urls=}"
+            )
+        return servers
 
     @classmethod
     def get_new_instance(

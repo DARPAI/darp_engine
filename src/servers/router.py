@@ -13,6 +13,8 @@ from .schemas import ServerCreate
 from .schemas import ServerUpdate
 from .service import ServerService
 from src.database import get_session
+from src.search.schemas import SearchServer
+from src.search.service import SearchService
 
 
 router = APIRouter(prefix="/servers")
@@ -24,6 +26,20 @@ async def create(
     data: ServerCreate, service: ServerService = Depends(ServerService.get_new_instance)
 ) -> Server:
     return await service.create(data)
+
+
+@router.get("/search")
+async def search(
+    query: str,
+    service: ServerService = Depends(ServerService.get_new_instance),
+    search_service: SearchService = Depends(SearchService.get_new_instance),
+) -> list[Server]:
+    servers = await service.get_search_servers()
+    formatted_servers = [SearchServer.model_validate(server) for server in servers]
+    server_urls = await search_service.get_fitting_servers(
+        servers=formatted_servers, query=query
+    )
+    return await service.get_servers_by_urls(server_urls=server_urls)
 
 
 @router.delete("/{id}")

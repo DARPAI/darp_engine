@@ -58,6 +58,11 @@ class ServerRepository:
     async def get_all_servers(self) -> Select:
         return select(Server).options(selectinload(Server.tools))
 
+    async def get_servers_by_urls(self, urls: list[str]) -> list[Server]:
+        query = select(Server).where(Server.url.in_(urls))
+        result = await self.session.execute(query)
+        return list(result.scalars().all())
+
     async def delete_server(self, id: int) -> None:
         query = delete(Server).where(Server.id == id)
         await self.session.execute(query)
