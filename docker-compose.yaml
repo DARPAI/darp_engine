@@ -5,6 +5,10 @@ services:
     environment:
       - UVICORN_PORT
       - DATABASE_URL
+      - OPENAI_API_KEY
+      - OPENAI_API_BASE
+      - LLM_PROXY
+      - LLM_MODEL
     image: "$REGISTRY_IMAGE"
     container_name: "$CI_PROJECT_NAME"
     pull_policy: always
