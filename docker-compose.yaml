@@ -2,6 +2,7 @@ services:
   registry:
     build:
       context: .
+      dockerfile: src/Dockerfile
     environment:
       - UVICORN_PORT
       - DATABASE_URL
@@ -10,11 +11,25 @@ services:
       - LLM_PROXY
       - LLM_MODEL
     image: "$REGISTRY_IMAGE"
-    container_name: "$CI_PROJECT_NAME"
+    container_name: registry
     pull_policy: always
     restart: always
     volumes:
-      - /var/lib/highkey/$CI_PROJECT_NAME/logs:/workspace/logs
+      - /var/lib/highkey/registry/logs:/workspace/logs
+
+  registry_mcp_server:
+    build:
+      context: .
+      dockerfile: mcp_server/Dockerfile
+    environment:
+      - LOG_LEVEL
+      - REGISTRY_URL
+    image: "$MCP_REGISTRY_IMAGE"
+    container_name: registry_mcp_server
+    pull_policy: always
+    restart: always
+    volumes:
+      - /var/lib/highkey/registry/mcp_server/logs:/workspace/logs
 
 networks:
   default:

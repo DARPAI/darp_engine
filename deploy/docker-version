@@ -2,3 +2,4 @@
 
 DATE="$(date +%F)";
 export REGISTRY_IMAGE="hipasus/$CI_PROJECT_NAME:0.0-$DATE"
+export MCP_REGISTRY_IMAGE="hipasus/registry_mcp_server:0.0-$DATE"

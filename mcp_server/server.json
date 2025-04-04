@@ -1,0 +1,6 @@
+{
+  "name": "darp_search_engine",
+  "description": "Search Engine for MCP servers",
+  "endpoint": "http://registry_mcp/sse",
+  "logo": null
+}

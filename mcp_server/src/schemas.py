@@ -1,0 +1,23 @@
+from typing import Any
+
+from pydantic import BaseModel
+from pydantic import ConfigDict
+
+
+class BaseSchema(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+
+class Tool(BaseSchema):
+    name: str
+    description: str
+    input_schema: dict[str, Any]
+
+
+class RegistryServer(BaseSchema):
+    name: str
+    description: str
+    url: str
+    logo: str
+    id: int
+    tools: list[Tool]
