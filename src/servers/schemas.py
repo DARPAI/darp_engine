@@ -20,8 +20,11 @@ class ServerCreate(BaseSchema):
     logo: str
 
 
-class Server(ServerCreate):
+class ServerRead(ServerCreate):
     id: int
+
+
+class ServerWithTools(ServerRead):
     tools: list[Tool]
 
 

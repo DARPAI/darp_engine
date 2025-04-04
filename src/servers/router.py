@@ -8,11 +8,12 @@ from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy import Select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .schemas import Server
 from .schemas import ServerCreate
 from .schemas import ServerUpdate
+from .schemas import ServerWithTools
 from .service import ServerService
 from src.database import get_session
+from src.database import Server
 from src.search.schemas import SearchServer
 from src.search.service import SearchService
 
@@ -21,14 +22,14 @@ router = APIRouter(prefix="/servers")
 add_pagination(router)
 
 
-@router.post("/", response_model=Server)
+@router.post("/", response_model=ServerWithTools)
 async def create(
     data: ServerCreate, service: ServerService = Depends(ServerService.get_new_instance)
 ) -> Server:
     return await service.create(data)
 
 
-@router.get("/search")
+@router.get("/search", response_model=ServerWithTools)
 async def search(
     query: str,
     service: ServerService = Depends(ServerService.get_new_instance),
@@ -49,7 +50,7 @@ async def delete_server(
     return await service.delete_server(id=id)
 
 
-@router.get("/", response_model=Page[Server])
+@router.get("/", response_model=Page[ServerWithTools])
 async def get_all_servers(
     params: Params = Depends(),
     service: ServerService = Depends(ServerService.get_new_instance),
@@ -59,7 +60,7 @@ async def get_all_servers(
     return await paginate(session, servers, params)
 
 
-@router.get("/{id}", response_model=Server)
+@router.get("/{id}", response_model=ServerWithTools)
 async def get_server_by_id(
     id: int,
     service: ServerService = Depends(ServerService.get_new_instance),
@@ -67,7 +68,7 @@ async def get_server_by_id(
     return await service.get_server_by_id(id=id)
 
 
-@router.get("", response_model=list[Server])
+@router.get("", response_model=list[ServerWithTools])
 async def get_servers_by_ids(
     ids: list[int] = Query(...),
     service: ServerService = Depends(ServerService.get_new_instance),
@@ -75,7 +76,7 @@ async def get_servers_by_ids(
     return await service.get_servers_by_ids(ids=ids)
 
 
-@router.put("/{id}", response_model=Server)
+@router.put("/{id}", response_model=ServerWithTools)
 async def update_server(
     id: int,
     data: ServerUpdate,
