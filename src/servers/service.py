@@ -1,3 +1,5 @@
+from typing import Self
+
 from fastapi import Depends
 from mcp import ClientSession
 from mcp.client.sse import sse_client
@@ -5,6 +7,7 @@ from sqlalchemy import Select
 
 from .repository import ServerRepository
 from .schemas import ServerCreate
+from .schemas import ServerRead
 from .schemas import ServerUpdate
 from .schemas import Tool
 from src.database import Server
@@ -66,7 +69,10 @@ class ServerService:
 
     async def _assure_server_not_exists(self, **kwargs) -> None:
         if servers := await self.repo.find_servers(**kwargs):
-            raise ServerAlreadyExistsError(servers)
+            dict_servers = [
+                ServerRead.model_validate(server).model_dump() for server in servers
+            ]
+            raise ServerAlreadyExistsError(dict_servers)
 
     async def get_search_servers(self) -> list[Server]:
         servers_query = await self.repo.get_all_servers()
@@ -86,5 +92,5 @@ class ServerService:
     @classmethod
     def get_new_instance(
         cls, repo: ServerRepository = Depends(ServerRepository.get_new_instance)
-    ) -> "ServerService":
+    ) -> Self:
         return cls(repo=repo)

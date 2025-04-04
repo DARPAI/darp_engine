@@ -1,8 +1,6 @@
 from fastapi import HTTPException
 from fastapi import status
 
-from src.servers.schemas import Server
-
 
 class FastApiError(HTTPException):
 
@@ -13,12 +11,9 @@ class FastApiError(HTTPException):
 class ServerAlreadyExistsError(FastApiError):
     status_code: int = status.HTTP_400_BAD_REQUEST
 
-    def __init__(self, servers: list["ServerModel"]) -> None:
-        servers_str = ", ".join(server.name for server in servers)
+    def __init__(self, dict_servers: list[dict]) -> None:
+        servers_str = ", ".join(server["name"] for server in dict_servers)
         message = f"Server already exists: {servers_str}"
-        dict_servers = [
-            Server.model_validate(server).model_dump() for server in servers
-        ]
         super().__init__(message=message, servers=dict_servers)
 
 
