@@ -29,7 +29,7 @@ async def create(
     return await service.create(data)
 
 
-@router.get("/search", response_model=ServerWithTools)
+@router.get("/search", response_model=list[ServerWithTools])
 async def search(
     query: str,
     service: ServerService = Depends(ServerService.get_new_instance),
