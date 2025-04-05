@@ -24,6 +24,10 @@ services:
     environment:
       - LOG_LEVEL
       - REGISTRY_URL
+      - OPENAI_API_KEY
+      - OPENAI_API_BASE
+      - LLM_PROXY
+      - LLM_MODEL
     image: "$MCP_REGISTRY_IMAGE"
     container_name: registry_mcp_server
     pull_policy: always

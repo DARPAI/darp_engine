@@ -28,6 +28,9 @@ class Settings(BaseSettings):
     registry_url: str = "http://registry:80"
     log_dir: Path = Path("logs")
     mcp_port: int = 80
+    llm_proxy: str | None = None
+    openai_api_base: str = "https://api.openai.com/v1"
+    openai_api_key: str
     llm_model: str = "gpt-4o-mini"
     server_json: ServerJson = ServerJson.model_validate_json(
         Path(parent_folder / "server.json").read_text()

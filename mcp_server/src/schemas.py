@@ -21,3 +21,8 @@ class RegistryServer(BaseSchema):
     logo: str
     id: int
     tools: list[Tool]
+
+
+class ToolInfo(BaseSchema):
+    tool_name: str
+    server: RegistryServer
