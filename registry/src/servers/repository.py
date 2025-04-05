@@ -10,10 +10,10 @@ from sqlalchemy.orm import selectinload
 from .schemas import ServerCreate
 from .schemas import ServerUpdate
 from .schemas import Tool
-from src.database import get_session
-from src.database import Server
-from src.database import Tool as DBTool
-from src.errors import ServerNotFoundError
+from registry.src.database import get_session
+from registry.src.database import Server
+from registry.src.database import Tool as DBTool
+from registry.src.errors import ServerNotFoundError
 
 
 class ServerRepository:

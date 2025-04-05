@@ -7,8 +7,8 @@ from openai import AsyncOpenAI
 from .prompts import get_top_servers
 from .schemas import SearchResponse
 from .schemas import SearchServer
-from src.logger import logger
-from src.settings import settings
+from registry.src.logger import logger
+from registry.src.settings import settings
 
 
 class SearchService:

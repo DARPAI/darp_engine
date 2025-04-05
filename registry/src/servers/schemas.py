@@ -3,7 +3,7 @@ from typing import Any
 from pydantic import ConfigDict
 from pydantic import Field
 
-from src.base_schema import BaseSchema
+from registry.src.base_schema import BaseSchema
 
 
 class Tool(BaseSchema):

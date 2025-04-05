@@ -12,10 +12,10 @@ from .schemas import ServerCreate
 from .schemas import ServerUpdate
 from .schemas import ServerWithTools
 from .service import ServerService
-from src.database import get_session
-from src.database import Server
-from src.search.schemas import SearchServer
-from src.search.service import SearchService
+from registry.src.database import get_session
+from registry.src.database import Server
+from registry.src.search.schemas import SearchServer
+from registry.src.search.service import SearchService
 
 
 router = APIRouter(prefix="/servers")

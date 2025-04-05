@@ -10,10 +10,10 @@ from .schemas import ServerCreate
 from .schemas import ServerRead
 from .schemas import ServerUpdate
 from .schemas import Tool
-from src.database import Server
-from src.errors import ServerAlreadyExistsError
-from src.errors import ServerNotFoundError
-from src.logger import logger
+from registry.src.database import Server
+from registry.src.errors import ServerAlreadyExistsError
+from registry.src.errors import ServerNotFoundError
+from registry.src.logger import logger
 
 
 class ServerService:
