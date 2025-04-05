@@ -2,7 +2,7 @@ services:
   registry:
     build:
       context: .
-      dockerfile: src/Dockerfile
+      dockerfile: registry/Dockerfile
     environment:
       - UVICORN_PORT
       - DATABASE_URL
@@ -15,7 +15,7 @@ services:
     pull_policy: always
     restart: always
     volumes:
-      - /var/lib/highkey/registry/logs:/workspace/logs
+      - /var/lib/hipasus/registry/api/logs:/workspace/logs
 
   registry_mcp_server:
     build:
@@ -33,7 +33,7 @@ services:
     pull_policy: always
     restart: always
     volumes:
-      - /var/lib/highkey/registry/mcp_server/logs:/workspace/logs
+      - /var/lib/hipasus/registry/mcp_server/logs:/workspace/logs
 
 networks:
   default:

@@ -5,9 +5,9 @@ from sqlalchemy.ext.asyncio import async_sessionmaker
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.ext.asyncio import create_async_engine
 
-from src.errors import FastApiError
-from src.logger import logger
-from src.settings import settings
+from registry.src.errors import FastApiError
+from registry.src.logger import logger
+from registry.src.settings import settings
 
 async_engine = create_async_engine(
     settings.database_url_async,

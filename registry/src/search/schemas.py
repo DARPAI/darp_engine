@@ -1,6 +1,6 @@
 from pydantic import Field
 
-from src.base_schema import BaseSchema
+from registry.src.base_schema import BaseSchema
 
 
 class SearchServerURL(BaseSchema):
