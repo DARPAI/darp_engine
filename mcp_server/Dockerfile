@@ -4,5 +4,4 @@ COPY mcp_server/requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY mcp_server ./mcp_server
-
-CMD python3 -m mcp_server.src.main
+ENV PATH "$PATH:/workspace/mcp_server/scripts"

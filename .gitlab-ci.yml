@@ -25,7 +25,7 @@ build:
     - darp-group-shell-runner
   script:
     - source deploy/docker-version
-    - docker compose build
+    - docker compose --profile main build
 
 deploy-test:
   stage: deploy
