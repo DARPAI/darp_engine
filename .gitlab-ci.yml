@@ -36,6 +36,15 @@ deploy-test:
   script:
     - deploy/push-and-run "$TEST_DOCKER_HOST"
 
+deploy-memelabs:
+  stage: deploy
+  needs: ["build"]
+  when: manual
+  tags:
+    - darp-group-shell-runner
+  script:
+    - deploy/push-and-run "$MEMELABS_DOCKER_HOST"
+
 deploy-prod:
   stage: deploy
   when: manual
