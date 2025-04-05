@@ -22,6 +22,3 @@ class ServerNotFoundError(FastApiError):
 
     def __init__(self, id: int) -> None:
         super().__init__(message=f"Server not found: {id}", id=id)
-
-
-from src.database import Server as ServerModel  # noqa
