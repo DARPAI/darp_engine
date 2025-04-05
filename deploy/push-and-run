@@ -10,4 +10,4 @@ export DOCKER_HOST="$1"
 
 docker image pull "$REGISTRY_IMAGE"
 docker image pull "$MCP_REGISTRY_IMAGE"
-docker compose up -d --remove-orphans
+docker compose --profile main up -d --remove-orphans
