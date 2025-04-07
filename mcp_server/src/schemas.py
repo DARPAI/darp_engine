@@ -1,5 +1,7 @@
 from typing import Any
 
+from openai.types.chat import ChatCompletionMessage
+from openai.types.chat import ChatCompletionToolMessageParam
 from pydantic import BaseModel
 from pydantic import ConfigDict
 
@@ -26,3 +28,7 @@ class RegistryServer(BaseSchema):
 class ToolInfo(BaseSchema):
     tool_name: str
     server: RegistryServer
+
+
+class RoutingResponse(BaseSchema):
+    conversation: list[ChatCompletionMessage | ChatCompletionToolMessageParam]
