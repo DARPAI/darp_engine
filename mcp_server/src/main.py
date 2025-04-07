@@ -1,7 +1,6 @@
 from mcp.server.fastmcp import FastMCP
-from openai.types.chat import ChatCompletionMessage
-from openai.types.chat import ChatCompletionToolMessageParam
 
+from .schemas import RoutingResponse
 from mcp_server.src.settings import settings
 from mcp_server.src.tools import Tools
 
@@ -19,9 +18,10 @@ async def search_urls(request: str) -> list[str]:
 @mcp.tool()
 async def routing(
     request: str,
-) -> list[ChatCompletionMessage | ChatCompletionToolMessageParam]:
+) -> str:
     """Respond to any user request using MCP tools selected specifically for it."""
-    return await tools.routing(request=request)
+    response = await tools.routing(request=request)
+    return RoutingResponse(conversation=response).model_dump_json()
 
 
 if __name__ == "__main__":
