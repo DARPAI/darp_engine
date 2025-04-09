@@ -14,7 +14,7 @@ class Server(Base):
     url: Mapped[str] = mapped_column(String(), nullable=False, unique=True)
     name: Mapped[str] = mapped_column(String(), nullable=False, unique=True)
     description: Mapped[str] = mapped_column(String(), nullable=False)
-    logo: Mapped[str] = mapped_column(String())
+    logo: Mapped[str | None] = mapped_column(String(), nullable=True)
     tools: Mapped[list["models.tool.Tool"]] = relationship(
         back_populates="server", cascade="all, delete-orphan"
     )

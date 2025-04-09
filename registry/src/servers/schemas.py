@@ -17,7 +17,7 @@ class ServerCreate(BaseSchema):
     name: str
     description: str
     url: str
-    logo: str
+    logo: str | None = None
 
 
 class ServerRead(ServerCreate):
