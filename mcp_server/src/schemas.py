@@ -20,7 +20,7 @@ class RegistryServer(BaseSchema):
     name: str
     description: str
     url: str
-    logo: str
+    logo: str | None
     id: int
     tools: list[Tool]
 

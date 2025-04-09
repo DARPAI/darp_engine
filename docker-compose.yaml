@@ -12,9 +12,9 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-darp_engine}
       POSTGRES_PORT: ${POSTGRES_PORT:-5432}
       OPENAI_API_KEY: ${OPENAI_API_KEY}
-      OPENAI_API_BASE: ${OPENAI_API_BASE}
-      LLM_PROXY: ${LLM_PROXY}
-      LLM_MODEL: ${LLM_MODEL}
+      OPENAI_API_BASE: ${OPENAI_API_BASE:-}
+      LLM_PROXY: ${LLM_PROXY:-}
+      LLM_MODEL: ${LLM_MODEL:-}
     image: "$REGISTRY_IMAGE"
     container_name: registry
     pull_policy: always
@@ -60,7 +60,7 @@ services:
     profiles:
       - main
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB" ]
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
       interval: 7s
       timeout: 5s
       retries: 5
