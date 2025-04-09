@@ -1,5 +1,5 @@
 # DARPEngine
-The searchengine for MCP
+The MCP searchengine for DARP.
 
 [![X][x-image]][x-url]
 [![Code style: black][black-image]][black-url]
@@ -143,5 +143,5 @@ The DARPEngine codebase is under MIT license.
 [pydantic-url]: https://pydantic.dev
 [pre-commit-image]: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
 [pre-commit-url]: https://github.com/pre-commit/pre-commit
-[license-image]: https://img.shields.io/github/license/DARP_AI/darp_engine
+[license-image]: https://img.shields.io/github/license/DARPAI/darp_engine
 [license-url]: https://opensource.org/licenses/MIT
