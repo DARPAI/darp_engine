@@ -1,0 +1,73 @@
+services:
+
+  registry:
+    build:
+      context: .
+      dockerfile: registry/Dockerfile
+    environment:
+      UVICORN_PORT: ${UVICORN_PORT:-80}
+      POSTGRES_HOST: ${POSTGRES_HOST:-registry_postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-change_me}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me}
+      POSTGRES_DB: ${POSTGRES_DB:-darp_engine}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      OPENAI_API_BASE: ${OPENAI_API_BASE:-}
+      LLM_PROXY: ${LLM_PROXY:-}
+      LLM_MODEL: ${LLM_MODEL:-}
+    image: "$REGISTRY_IMAGE"
+    container_name: registry
+    pull_policy: always
+    restart: always
+    profiles:
+      - main
+    volumes:
+      - /var/lib/hipasus/registry/api/logs:/workspace/logs
+    command: start.sh
+
+  registry_mcp_server:
+    build:
+      context: .
+      dockerfile: mcp_server/Dockerfile
+    environment:
+      - MCP_PORT
+      - LOG_LEVEL
+      - REGISTRY_URL
+      - OPENAI_API_KEY
+      - OPENAI_API_BASE
+      - LLM_PROXY
+      - LLM_MODEL
+    image: "$MCP_REGISTRY_IMAGE"
+    container_name: registry_mcp_server
+    pull_policy: always
+    restart: always
+    profiles:
+      - main
+    volumes:
+      - /var/lib/hipasus/registry/mcp_server/logs:/workspace/logs
+    command: start.sh
+
+  registry_postgres:
+    container_name: registry_postgres
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-change_me}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me}
+      POSTGRES_DB: ${POSTGRES_DB:-darp_engine}
+    volumes:
+      - /var/lib/hipasus/registry/pg_data:/var/lib/postgresql/data
+    command: postgres -c 'max_connections=500'
+    profiles:
+      - main
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB" ]
+      interval: 7s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    restart: always
+
+networks:
+  default:
+    name: highkey_network
+    external: true

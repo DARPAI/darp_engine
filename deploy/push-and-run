@@ -1,0 +1,13 @@
+#!/bin/sh
+set -ex
+
+. deploy/ssh-agent
+. deploy/docker-version
+
+docker image push "$REGISTRY_IMAGE"
+docker image push "$MCP_REGISTRY_IMAGE"
+export DOCKER_HOST="$1"
+
+docker image pull "$REGISTRY_IMAGE"
+docker image pull "$MCP_REGISTRY_IMAGE"
+docker compose --profile main up -d --remove-orphans

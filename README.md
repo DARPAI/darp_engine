@@ -1,92 +1,147 @@
-# Registry
+# DARPEngine
+The searchengine for MCP
 
+[![X][x-image]][x-url]
+[![Code style: black][black-image]][black-url]
+[![Imports: reorder-python-imports][imports-image]][imports-url]
+[![Pydantic v2][pydantic-image]][pydantic-url]
+[![pre-commit][pre-commit-image]][pre-commit-url]
+[![License MIT][license-image]][license-url]
 
+DARPEngine stores metadata for MCP servers hosted online and provides smart search capabilites.
+
+## Features
+
+* Simple CLI
+* API access to search
+* MCP tool to retrieve search results for connecting manually
+* Routing MCP tool based on the server: answer any question using the tools found for the user's request
+
+### Coming soon
+
+* Support for `.well-known/mcp.json`
+* Crawler
+* Nice frontend
+* Hosted version
+* Validate different levels of SSL certificates and integrate this info smarly to make sensitive MCP servers difficult to spoof
+
+## Installation
+
+```
+export OPENAI_API_KEY=sk-...
+docker network create highkey_network
+docker compose build
+docker compose -f docker-compose.yaml -f docker-compose-debug.yaml up --build --wait
+```
 
 ## Getting started
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+You can connect the DARPEngine to an MCP Client (e.g. Claude Desktop or Cursor) using mcp tools provided. Just select SSE mode & specify `http://localhost:4689/sse` as the endpoint.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
 
-## Add your files
+### Direct CLI use
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+Another way is to use CLI. Most of the scripts work with just standard Python libraries, but routing tool requires mcp package, you can install script requirements like this:
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.aurora/darp/registry.git
-git branch -M main
-git push -uf origin main
+conda create -n darp 'python>=3.10'
+conda activate darp
+pip install -r mcp_server/requirements.txt
 ```
 
-## Integrate with your tools
+When installation is over we can use the scripts.
 
-- [ ] [Set up project integrations](https://gitlab.aurora/darp/registry/-/settings/integrations)
+To begin with it we need to add some MCP servers to the engine, e.g:
 
-## Collaborate with your team
+```
+$ python scripts/darp-add.py --url http://memelabs.ai:3006/sse --name code_analysis --description "Analyze gitlab repo for quality, topics, packages use"
+```
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+Then we can make the requests:
 
-## Test and Deploy
+```
+$ python scripts/darp-search.py "Analyze https://github.com/BenderV/autochat"
+Found 1 servers:
+code_analysis
+```
 
-Use the built-in continuous integration in GitLab.
+You can get more useful results with the routing tool:
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+```
+$ python scripts/darp-router.py "Analyze https://github.com/BenderV/autochat"
+assistant: [tool_calls]
+[tool] ...
+[tool] ...
+[tool] ...
+assistant:
+  ### Code Quality
+  The code in the AutoChat repository demonstrates a good level of quality concerning **readability**, **maintainability**, and adherence to best practices:
 
-***
+  - **Readability**: Consistent naming conventions are evident, with adherence to Python's PEP 8 styling guidelines. Descriptive function and variable names enhance the understanding of the code's purpose.
 
-# Editing this README
+  - **Maintainability**: The code is structured to allow easy updates and modifications, with a clear separation of concerns observed through the use of classes and methods handling distinct functionalities.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!).  Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+  - **Best Practices**: Extensive use of exception handling, type annotations, and docstrings reflect best practices in Python development. Some TODO comments suggest areas for improvement, indicating that further attention is needed.
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+  ### Code Structure
+  The code is organized into multiple files and modules, each serving a distinct purpose:
 
-## Name
-Choose a self-explaining name for your project.
+  - **Modular Design**: Various classes (e.g., `Autochat`, `Image`, `Message`) indicate a well-structured object-oriented design that promotes separation of concerns, making the code easier to navigate.
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+  - **Logical Organization**: Files are logically separated based on functionality. For example, `chat.py` focuses on chat-related logic, while `model.py` handles message and image processing. The utility functions in `utils.py` enhance reusability.
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+  - **Testing**: The presence of a test file (`tests/test_utils.py`) shows commitment to testing, crucial for code reliability. The use of `unittest` indicates a structured approach to testing individual components.
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+  ### Main Functionality
+  The code appears to be part of an **AutoChat package**, providing a framework for building conversational agents. Key functionalities include:
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+  - **Chat Management**: The `Autochat` class acts as the main interface for managing conversations, handling message history, context, and interaction limits.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+  - **Message Handling**: Classes like `Message` and `MessagePart` enable structured message creation and processing, accommodating different message types, including text and images.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+  - **Functionality Extensions**: Methods like `add_tool` and `add_function` allow dynamic addition of tools and functions, facilitating customization of the chat experience.
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+  - **Provider Integration**: Different API provider integrations (e.g., OpenAI, Anthropic) are encapsulated within respective classes, allowing flexibility in backend communication.
+
+  - **Utilities**: Utility functions offer additional capabilities such as CSV formatting and function parsing that support main chat operations.
+
+  Overall, the codebase is well-organized and showcases a thoughtful approach to developing a conversational AI framework. There is room for further refinement and enhancement, particularly in documentation and clarity of variable names.
+
+  ### Library Usage
+  The project makes use of **AI libraries**, indicated by its functionality related to conversational agents and integration with AI service providers. This supports its ability to manage interactions with AI models efficiently.
+
+  ### Summary
+  The AutoChat project is a chat system designed for communication with various AI models, primarily through the `Autochat` class, which manages conversations and supports complex message types, including text and images. The code is moderately complex due to its integration with external APIs and its ability to handle diverse interactions through extensible methods like `add_tool` and `add_function`. The quality of code is commendable, featuring a well-structured modular design that promotes readability and maintainability, although some areas require further documentation and refinement, such as clarifying variable names and enhancing comments. The organization into separate files for models, utilities, and tests aids development, but the utility functions could benefit from better categorization for improved clarity.
+```
+
+Of course, the usefulness of the result depends on the MCP servers you connect to the engine.
+
+
+## Get help and support
+
+Please feel free to connect with us using the [discussion section](https://github.com/hipasus/darp_engine/discussions).
 
 ## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+Please read [Contributing to Docling](https://github.com/docling-project/docling/blob/main/CONTRIBUTING.md) for details.
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+Follow us on X: https://x.com/DARP_AI
 
 ## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+The DARPEngine codebase is under MIT license.
+
+<br>
+
+[x-image]: https://img.shields.io/twitter/follow/DARP_AI?style=social
+[x-url]: https://x.com/DARP_AI
+[black-image]: https://img.shields.io/badge/code%20style-black-000000.svg
+[black-url]: https://github.com/psf/black
+[imports-image]: https://img.shields.io/badge/%20imports-reorder_python_imports-%231674b1?style=flat&labelColor=ef8336
+[imports-url]: https://github.com/asottile/reorder-python-imports/
+[pydantic-image]: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/pydantic/pydantic/main/docs/badge/v2.json
+[pydantic-url]: https://pydantic.dev
+[pre-commit-image]: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
+[pre-commit-url]: https://github.com/pre-commit/pre-commit
+[license-image]: https://img.shields.io/github/license/DARP_AI/darp_engine
+[license-url]: https://opensource.org/licenses/MIT

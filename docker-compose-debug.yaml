@@ -1,0 +1,33 @@
+services:
+
+  registry:
+    image: registry
+    pull_policy: never
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    profiles:
+      - ''
+    volumes:
+      - ./registry:/workspace/registry
+      - ./alembic:/workspace/alembic
+    command: start-debug.sh
+
+  registry_mcp_server:
+    image: registry_mcp_server
+    pull_policy: never
+    restart: unless-stopped
+    ports:
+      - "4689:80"
+    profiles:
+      - ''
+    volumes:
+      - ./mcp_server:/workspace/mcp_server
+    command: start-debug.sh
+
+  registry_postgres:
+    ports:
+      - "5432:5432"
+    profiles:
+      - ''
+    restart: unless-stopped
